@@ -9,6 +9,8 @@ const BLOCK_SIZE = 30;
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 let score = 0;
 let highScore = localStorage.getItem('highScore') || 0;
+let dropSpeed = 500; // Tiempo inicial para la caída
+let dropInterval;
 
 highScoreElement.textContent = highScore;
 
@@ -86,6 +88,7 @@ function moveDown() {
         currentPos.y--;
         placeTetromino();
         reset();
+        checkRows();
     }
 }
 
@@ -108,27 +111,34 @@ function placeTetromino() {
             }
         }
     }
-
-    clearLines();
-    updateScore();
 }
 
-function clearLines() {
+function checkRows() {
+    let linesCleared = 0;
     for (let row = ROWS - 1; row >= 0; row--) {
         if (board[row].every(cell => cell !== 0)) {
             board.splice(row, 1);
             board.unshift(Array(COLS).fill(0));
-            score += 100;
+            linesCleared++;
         }
+    }
+    if (linesCleared > 0) {
+        score += 200 * linesCleared;
+        scoreElement.textContent = score;
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('highScore', highScore);
+            highScoreElement.textContent = highScore;
+        }
+        increaseSpeed();
     }
 }
 
-function updateScore() {
-    scoreElement.textContent = score;
-    if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('highScore', highScore);
-        highScoreElement.textContent = highScore;
+function increaseSpeed() {
+    if (score >= 200 && score % 200 === 0) {
+        dropSpeed = Math.max(100, dropSpeed - 50); // Aumentar la velocidad pero sin hacerla demasiado rápida
+        clearInterval(dropInterval);
+        dropInterval = setInterval(moveDown, dropSpeed);
     }
 }
 
@@ -157,8 +167,6 @@ function gameLoop() {
     drawBoard();
     drawTetromino();
     moveDown();
-    
-    setTimeout(gameLoop, 500);
 }
 
-gameLoop();
+dropInterval = setInterval(gameLoop, dropSpeed);
