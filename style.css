@@ -9,6 +9,7 @@ body {
     background-color: #111;
     color: white;
     text-align: center;
+    flex-direction: column;
 }
 
 #game {
@@ -24,4 +25,22 @@ body {
 
 #info {
     margin-top: 20px;
+}
+
+#controls {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #666;
 }
