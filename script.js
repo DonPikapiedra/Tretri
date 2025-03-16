@@ -148,17 +148,16 @@ function gameOver() {
     reset();
 }
 
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') moveLeft();
-    if (event.key === 'ArrowRight') moveRight();
-    if (event.key === 'ArrowDown') moveDown();
-    if (event.key === 'ArrowUp') rotate();
-});
+document.getElementById('moveLeft').addEventListener('click', moveLeft);
+document.getElementById('moveRight').addEventListener('click', moveRight);
+document.getElementById('rotate').addEventListener('click', rotate);
+document.getElementById('moveDown').addEventListener('click', moveDown);
 
 function gameLoop() {
     drawBoard();
     drawTetromino();
     moveDown();
+    
     setTimeout(gameLoop, 500);
 }
 
